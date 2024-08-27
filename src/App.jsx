@@ -1,35 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useForm } from "react-hook-form"
+import {
+    Input,
+    RadioInputGroup,
+} from "./Components/Exports"
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        getValues,
+    } = useForm()
+    const submitHandler = (data) => {
+        console.log(data)
+    }
+    return (
+        <form onSubmit={handleSubmit(submitHandler)}>
+            <Input
+                name="title"
+                label="projectTitle"
+                register={register}
+                required
+                validationSchema={{
+                    required: "title is required",
+                    minLength: {
+                        value: 20,
+                        message: "title length 20...."
+                    }
+                }}
+                errors={errors}
+            />
+            <Input
+                name="name"
+                label="name"
+                register={register}
+                required
+                validationSchema={{
+                    required: "name is required",
+                    minLength: {
+                        value: 20,
+                        message: "name length 20...."
+                    }
+                }}
+                errors={errors}
+            // title={getValues("title")}  **if we want access to input with name title in this input field
+            />
+            <div>
+                <RadioInputGroup
+                    errors={errors}
+                    register={register}
+                    watch={watch}
+                    configs={{
+                        name: "gender",
+                        validationSchema: { required: "gender is required" },
+                        options: [
+                            {
+                                value: "male",
+                                label: "male",
+                            },
+                            {
+                                value: "female",
+                                label: "female",
+                            }
+                        ]
+                    }
+                    }
+                />
+            </div>
+            <button type="submit">submit</button>
+        </form>
+    )
 }
 
 export default App
